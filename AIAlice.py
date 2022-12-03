@@ -262,7 +262,7 @@ def change_wallpaper():
     photo = parsed_json['urls']['full']
     # Location where we download the image to.
     urllib2.urlretrieve(photo, "img\\a.png")
-    image = os.path.join("img\\a.png")
+    image = os.path.join("C:\\Users\\Acer\\OneDrive\\Máy tính\\AI\\img\\a.png")
     ctypes.windll.user32.SystemParametersInfoW(20, 0, image, 3)
     speak("Đã đổi thành công. Bạn ra home xem có đẹp không nha ?")
 #phát nhạc trong máy
@@ -436,4 +436,3 @@ Label.place(
 )
 window.resizable(False, False)
 window.mainloop()
-
