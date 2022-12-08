@@ -4,25 +4,23 @@ from re import search
 import webbrowser as wb
 #Chuyển âm thanh thành văn bản
 import speech_recognition as sr
+#Chuyển văn bản thành âm thanh
+from gtts import gTTS
 import pyttsx3
 #Xử lí thởi gian
 import time
 from datetime import date, datetime
-from youtube_search import YoutubeSearch
 #Lấy thông tin từ web
 import requests
 import ctypes
 import json
 import urllib
 import urllib.request as urllib2
-#Chuyển văn bản thành âm thanh
-from gtts import gTTS
 #Mở âm thanh
 import playsound
 #truy cập, xử lí file hệ thống
 import os
 #Thư viện Tkinter hỗ trợ giao diện
-from tkinter import Tk, RIGHT, BOTH, RAISED
 from tkinter.ttk import Frame, Button, Style
 from tkinter import *
 from PIL import Image, ImageTk
@@ -48,8 +46,7 @@ robot_speak = pyttsx3.init()
 robot_brain = "Xin chào master"
 master = ""
 #Giao diện
-window = Tk()
-    
+window = Tk()   
 window.geometry("1000x600")
 window.title("AI ALICE")
 window.configure(bg = "#333131")
@@ -66,7 +63,6 @@ canvas.place(x = 0, y = 0)
 canvas1 = Canvas(
     window,
     bg = "#F8EEEE",
-    # bg = canvas1_bg,
     bd = 0,
     height = 541,
     width = 473,
@@ -81,14 +77,7 @@ text_area = Text(
     width= 473
 )
 text_area.place(x = 0, y = 0)
-scroll = Scrollbar(canvas1, command=text_area.yview)
-img0 = PhotoImage(file = f"img0.png")
 
-#Hàm nhận lệnh
-def get_command():
-    time.sleep(50)
-    master = entry0.get()
-    return master
 #hàm giúp alice nói
 def speak(robot_brain):
     print("Alice: " + robot_brain)
@@ -99,6 +88,7 @@ def speak(robot_brain):
     os.remove("sound.mp3")
     robot_speak.runAndWait()
     window.update()
+
 #Hàm nghe lệnh
 def get_audio():
     playsound.playsound("Ping.mp3")
@@ -107,7 +97,6 @@ def get_audio():
     robot_ear = sr.Recognizer()
     with sr.Microphone() as source:
         robot_ear.pause_threshold = 2
-        # print("You: ")
         audio = robot_ear.listen(source, phrase_time_limit=6)
         try:
             master = robot_ear.recognize_google(audio, language="vi-VN")
@@ -133,9 +122,10 @@ def Hello():
     robot_brain = "Alice đã sẵn sàng, master?"
     speak(robot_brain)
     window.update()
+
 #hàm lấy thời gian
 def time_message():
-    robot_brain = "Bạn muốn xem thờ gian cụ thể nào?"
+    robot_brain = "Bạn muốn xem thời gian cụ thể nào?"
     speak(robot_brain)
     master = get_audio()
     now = datetime.now()
@@ -158,6 +148,8 @@ def time_message():
         speak("Tôi chưa hiểu ý của bạn. Bạn nói lại được không?")
         time.sleep(6)
     speak(robot_brain)
+
+
 #Tìm kiếm trên google
 def findgoogle():
     robot_brain = "Ngài muốn tìm gì trên google, master?"
@@ -167,6 +159,7 @@ def findgoogle():
     wb.get().open(url)
     robot_brain = f"Đây là kết quả của tìm kiếm {search} trên google, thưa ngài!!"
     speak(robot_brain)
+
 #Tìm kiếm và mở video trong youtube
 def findyoutube():
     robot_brain = "Ngài muốn tìm gì trên youtube, master?"
@@ -193,13 +186,13 @@ def findyoutube():
     elif "không" in answer:
         speak("Ngài còn yêu cầu gì nữa, master?")
         pass
+
 #Xem thời tiết
 def current_weather():
     speak("Bạn muốn xem thời tiết ở đâu ạ.")
     # Đường dẫn trang web để lấy dữ liệu về thời tiết
     ow_url = "https://api.openweathermap.org/data/2.5/weather?"
     # lưu tên thành phố vào biến city
-    #city = "thành phố Hồ Chí Minh"
     city = get_audio()
     # nếu biến city != 0 và = False thì để đấy ko xử lí gì cả
     if not city:
@@ -246,7 +239,7 @@ def current_weather():
         """
         speak(content)
     else:
-        # nếu tên thành phố không đúng thì nó nói dòng dưới 227
+        # nếu tên thành phố không đúng 
         speak("Không tìm thấy địa chỉ của bạn")
 
 #Đổi ảnh nền
@@ -265,6 +258,7 @@ def change_wallpaper():
     image = os.path.join("C:\\Users\\Acer\\OneDrive\\Máy tính\\AI\\img\\a.png")
     ctypes.windll.user32.SystemParametersInfoW(20, 0, image, 3)
     speak("Đã đổi thành công. Bạn ra home xem có đẹp không nha ?")
+
 #phát nhạc trong máy
 def play_music():
     speak("Đây là danh sách nhạc trong thư mục của ngài")
@@ -287,18 +281,15 @@ def play_music():
         while True:
             number = get_audio()
             i= int(w2n(number))
-            if i in master:
-                speak("Mời Ngài thưởng thức")
-                print("\nĐang phát bài :  " + ds[i])
-                os.system(myPATH + "\\" + ds[i])
-                print("\nĐã phát xong bài : \t\t" + ds[i])
-            else:
-                speak("Tôi không hiểu ý ngài!! xin hãy lặp lại")
+            speak("Mời Ngài thưởng thức")
+            print("\nĐang phát bài :  " + ds[i])
+            os.system(myPATH + "\\" + ds[i])
+            print("\nĐã phát xong bài : \t\t" + ds[i])
+            speak("Đã hết")
             speak("bạn có muốn nghe nữa không??")
             master = get_audio()
             if "không" in master:
-                pass
-        # speak("Đã hết")
+                break
     elif "phát hết" in master:
     # phát hết nhạc trong mục
         for i in range(len(ds)):
@@ -311,7 +302,6 @@ def play_music():
 def knowledge():
     try:
         speak("Thưa Ngài, Ngài muốn tìm gì ạ ?")
-        #text = get_audio().lower
         text = get_audio()
         contents = wikipedia.summary(text).split('\n')
         speak(contents[0])
@@ -327,6 +317,7 @@ def knowledge():
         speak("Đã hết cảm ơn Ngài đã lắng nghe")
     except:
          speak(f"Alice không định nghĩa được thuật ngữ của Ngài !!!")
+
 #chức năng
 def func1():
     content="""
@@ -341,6 +332,7 @@ def func1():
             8.Đọc thông tin trên wikipedia
             9.Tạm biệt"""
     speak(content)
+    
 def main():
     print("AI Alice Starting......")
     Hello()
@@ -376,6 +368,7 @@ def main():
             speak("Tôi chưa hiểu ý của ngài, Ngài lặp lại được không?")
 
 #Giao  dien
+img0 = PhotoImage(file = f"img0.png")
 b0 = Button(
     image = img0,
     borderwidth = 0,
@@ -390,7 +383,18 @@ b0.place(
     width = 134,
     height = 130,
     )
-
+Label = Label(
+    window,
+    text= "Trợ Lý ảo Alice",
+    bg = "#3C3939",
+    fg= "white",
+    font ="Inter, 40",
+)
+Label.place(
+    x= 559, y=31,
+    width = 376,
+    height =113
+)
 entry0_img = PhotoImage(file = f"img_textBox0.png")
 entry0_bg = canvas.create_image(
     207.5, 570.5,
@@ -406,14 +410,12 @@ entry0.place(
     x = 36.5, y = 550,
     width = 342.0,
     height = 39)
-#order = entry0.get()
 img1 = PhotoImage(file = f"img1.png")
 b1 = Button(
     image = img1,
     borderwidth = 0,
     bg = "#333131",
     highlightthickness = 0,
-    #command = inputorder,
     activebackground= "#333131",
     relief = "flat")
 
@@ -421,18 +423,5 @@ b1.place(
     x = 408, y = 550,
     width = 51,
     height = 41)
-
-Label = Label(
-    window,
-    text= "Trợ Lý ảo Alice",
-    bg = "#3C3939",
-    fg= "white",
-    font ="Inter, 40",
-)
-Label.place(
-    x= 559, y=31,
-    width = 376,
-    height =113
-)
 window.resizable(False, False)
 window.mainloop()
